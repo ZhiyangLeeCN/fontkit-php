@@ -4,6 +4,10 @@ jobs:
     docker:
       - image: php:7.1.6-cli
     steps:
+      - run:
+          name: gxx version
+          command: |
+            g++ --version
       - checkout
       - run:
           name: Configure
