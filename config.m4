@@ -5,7 +5,7 @@ if test "$PHP_FONTKIT" != "no"; then
 
   PHP_REQUIRE_CXX()
 
-  m4_include([ax_cxx_complie_stdcxx.m4])
+  m4_ifndef([PHP_CXX_COMPILE_STDCXX], [m4_include([php_cxx_compile_stdcxx.m4])])
 
   AC_MSG_CHECKING([if compiling with clang])
     AC_COMPILE_IFELSE([
@@ -277,9 +277,10 @@ if test "$PHP_FONTKIT" != "no"; then
         -DHB_NO_FALLBACK_SHAPE -DHB_NO_UCD -DHB_NO_WIN1256 -DHB_EXPERIMENTAL_API"
 
   PHP_EXT_CXX_FLAGS="-DZEND_ENABLE_STATIC_TSRMLS_CACHE=1"
-  AX_CXX_COMPILE_STDCXX(11, noext, mandatory)
   EXT_C_FLAGS="$LIB_ICU_CXX_FLAGS $LIB_HARFBUZZ_CXX_FLAGS $PHP_EXT_CXX_FLAGS"
-  EXT_CXX_FLAGS="$EXT_C_FLAGS"
+
+  PHP_CXX_COMPILE_STDCXX(11, mandatory, EXT_STDCXX_SWiTCH)
+  EXT_CXX_FLAGS="$EXT_C_FLAGS $EXT_STDCXX_SWiTCH"
 
   PHP_NEW_EXTENSION(fontkit, $PHP_EXT_SOURCES, shared,, $EXT_C_FLAGS)
   PHP_ADD_SOURCES_X([]PHP_EXT_DIR(fontkit), $PHP_EXT_CXX_SOURCES, $EXT_CXX_FLAGS, shared_objects_fontkit, yes)
