@@ -97,7 +97,7 @@ PHP_METHOD(Font, getData)
 PHP_METHOD(Font, streamWrite)
 {
     zend_string *filename;
-    zend_bool result;
+    int result;
     zval *zcontext = NULL;
     hb_blob_t *hb_blob = NULL;
     font_php_object *font_php_obj = NULL;
@@ -109,15 +109,19 @@ PHP_METHOD(Font, streamWrite)
         Z_PARAM_RESOURCE_EX(zcontext, 1, 0)
     ZEND_PARSE_PARAMETERS_END();
 
-    context = php_stream_context_from_zval(zcontext, PHP_FILE_NO_DEFAULT_CONTEXT);
+    context = fontkit_cxx_php_stream_context_from_zval(zcontext, PHP_FILE_NO_DEFAULT_CONTEXT);
     font_php_obj = php_font_fetch_object(Z_OBJ_P(getThis()));
     hb_blob = hb_face_reference_blob(font_php_obj->face);
 
     result = hb_blob_write_to_php_filename(filename, hb_blob, context);
-    RETURN_BOOL(result)
+    if (result == SUCCESS) {
+        RETURN_TRUE
+    } else {
+        RETURN_FALSE
+    }
 }
 
-PHP_METHOD(Font, destory)
+PHP_METHOD(Font, destroy)
 {
     font_php_object *font_php_obj = php_font_fetch_object(Z_OBJ_P(getThis()));
     php_font_resource_free(font_php_obj);
@@ -129,13 +133,13 @@ static const zend_function_entry font_php_class_methods[] = {
         PHP_ME(Font, subset, arginfo_font_subset, ZEND_ACC_PUBLIC)
         PHP_ME(Font, getData, arginfo_font_get_data, ZEND_ACC_PUBLIC)
         PHP_ME(Font, streamWrite, arginfo_font_stream_write, ZEND_ACC_PUBLIC)
-        PHP_ME(Font, destory, arginfo_font_destory, ZEND_ACC_PUBLIC)
+        PHP_ME(Font, destroy, arginfo_font_destory, ZEND_ACC_PUBLIC)
         PHP_FE_END
 };
 
 zend_object *php_font_object_new(zend_class_entry *ce)
 {
-    font_php_object *font_object = emalloc(sizeof(font_php_object) + zend_object_properties_size(ce));
+    font_php_object *font_object = fontkit_cxx_php_obj_emalloc(font_php_object, ce);
 
     zend_object_std_init(&font_object->std, ce);
     object_properties_init(&font_object->std, ce);
@@ -150,9 +154,8 @@ zend_object *php_font_object_new(zend_class_entry *ce)
 void php_font_object_free(zend_object *object)
 {
     font_php_object *font_php_object = php_font_fetch_object(object);
-    zend_object_std_dtor(&font_php_object->std);
     php_font_resource_free(font_php_object);
-    efree(font_php_object);
+    zend_object_std_dtor(&font_php_object->std);
 }
 
 void php_font_resource_free(font_php_object *font_php_object)

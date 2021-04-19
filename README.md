@@ -1,13 +1,13 @@
 # FontKit-PHP
 
 ## Requirement
-- PHP 7 +
-- C++11
+- PHP 7.1 and later has been tested. 
+- Compiler support for C++11 is required for building the ICU libraries.
 
 ### Install
 ```
-/use/local/7.xxx/bin/phpize
-./configure --with-php-config=/use/local/7.xxx/bin/php-config
+/path/php/bin/phpize
+./configure --with-php-config=/path/php/bin/php-config
 make && make install
 ```
 
@@ -26,7 +26,7 @@ $font = $blob->createFont(0);
 $subFont = $font->subset("Test subset words.");
 $subFont->streamWrite('./subset.otf');
 
-$blob->destory();
-$font->destory();
-$subFont->destory();
+$blob->destroy();
+$font->destroy();
+$subFont->destroy();
 ```

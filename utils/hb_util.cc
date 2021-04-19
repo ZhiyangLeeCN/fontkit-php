@@ -61,7 +61,7 @@ hb_blob_t *hb_blob_create_from_php_filename(zend_string *filename, php_stream_co
     return hb_blob;
 }
 
-zend_bool hb_blob_write_to_php_stream(php_stream *stream, hb_blob_t *hb_blob)
+int hb_blob_write_to_php_stream(php_stream *stream, hb_blob_t *hb_blob)
 {
     zend_long hb_blob_len = hb_blob_get_length(hb_blob);
     ssize_t numbytes = php_stream_write(stream, hb_blob_get_data(hb_blob, NULL), hb_blob_len);
@@ -71,9 +71,9 @@ zend_bool hb_blob_write_to_php_stream(php_stream *stream, hb_blob_t *hb_blob)
     }
     return SUCCESS;
 }
-zend_bool hb_blob_write_to_php_filename(zend_string *filename, hb_blob_t *hb_blob, php_stream_context *context)
+int hb_blob_write_to_php_filename(zend_string *filename, hb_blob_t *hb_blob, php_stream_context *context)
 {
-    zend_bool result;
+    int result;
     php_stream *stream = php_stream_open_wrapper_ex(ZSTR_VAL(filename), "wb", REPORT_ERRORS, NULL, context);
     if (!stream) {
         return FAILURE;

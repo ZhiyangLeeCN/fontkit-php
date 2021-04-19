@@ -46,7 +46,7 @@ PHP_METHOD(Blob, streamRead)
         Z_PARAM_RESOURCE_EX(zcontext, 1, 0)
     ZEND_PARSE_PARAMETERS_END();
 
-    context = php_stream_context_from_zval(zcontext, 0);
+    context = fontkit_cxx_php_stream_context_from_zval(zcontext, 0);
     hb_blob_t *blob = hb_blob_create_from_php_filename(filename, context);
     if (!blob) {
         php_error_docref(NULL, E_WARNING, "Failed to read font data from \"%s\"", ZSTR_VAL(filename));
@@ -103,7 +103,7 @@ PHP_METHOD(Blob, createFont)
     RETURN_OBJ(font_object)
 }
 
-PHP_METHOD(Blob, destory)
+PHP_METHOD(Blob, destroy)
 {
     blob_php_object *blob_php_object = php_blob_fetch_object(Z_OBJ_P(getThis()));
     php_blob_resource_free(blob_php_object);
@@ -115,13 +115,13 @@ static const zend_function_entry blob_php_class_methods[] = {
         PHP_ME(Blob, streamRead, arginfo_blob_stream_read, ZEND_ACC_PUBLIC | ZEND_ACC_STATIC)
         PHP_ME(Blob, faceCount, arginfo_blob_face_count, ZEND_ACC_PUBLIC)
         PHP_ME(Blob, createFont, arginfo_blob_createFont, ZEND_ACC_PUBLIC)
-        PHP_ME(Blob, destory, arginfo_blob_destory, ZEND_ACC_PUBLIC)
+        PHP_ME(Blob, destroy, arginfo_blob_destory, ZEND_ACC_PUBLIC)
         PHP_FE_END
 };
 
 zend_object *php_blob_object_new(zend_class_entry *ce)
 {
-    blob_php_object *font_object = emalloc(sizeof(blob_php_object) + zend_object_properties_size(ce));
+    blob_php_object *font_object = fontkit_cxx_php_obj_emalloc(blob_php_object, ce);
 
     zend_object_std_init(&font_object->std, ce);
     object_properties_init(&font_object->std, ce);
@@ -135,9 +135,8 @@ zend_object *php_blob_object_new(zend_class_entry *ce)
 void php_blob_object_free(zend_object *object)
 {
     blob_php_object *blob_php_object = php_blob_fetch_object(object);
-    zend_object_std_dtor(&blob_php_object->std);
     php_blob_resource_free(blob_php_object);
-    efree(blob_php_object);
+    zend_object_std_dtor(&blob_php_object->std);
 }
 
 void php_blob_resource_free(blob_php_object *blob_php_object)

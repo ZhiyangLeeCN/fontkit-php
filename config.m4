@@ -263,7 +263,7 @@ if test "$PHP_FONTKIT" != "no"; then
 
   PHP_EXT_CXX_SOURCES="$THIRD_PARTY_SOURCES utils/icu_util.cc utils/hb_util.cc"
 
-  PHP_EXT_SOURCES="fontkit.c font_php_class.c blob_php_class.c"
+  PHP_EXT_SOURCES="$PHP_EXT_CXX_SOURCES fontkit.cc font_php_class.cc blob_php_class.cc"
 
   LIB_ICU_CXX_FLAGS="-DU_USING_ICU_NAMESPACE=0 -DU_ENABLE_DYLOAD=0 -DU_ENABLE_TRACING=1 -DU_ENABLE_RESOURCE_TRACING=0 \
 		-DICU_UTIL_DATA_IMPL=ICU_UTIL_DATA_FILE -DUCHAR_TYPE=uint16_t -DUCONFIG_ONLY_HTML_CONVERSION=1 -DUCONFIG_USE_WINDOWS_LCID_MAPPING_API=0 \
@@ -282,6 +282,5 @@ if test "$PHP_FONTKIT" != "no"; then
   PHP_CXX_COMPILE_STDCXX(11, mandatory, EXT_STDCXX_SWiTCH)
   EXT_CXX_FLAGS="$EXT_C_FLAGS $EXT_STDCXX_SWiTCH"
 
-  PHP_NEW_EXTENSION(fontkit, $PHP_EXT_SOURCES, shared,, $EXT_C_FLAGS)
-  PHP_ADD_SOURCES_X([]PHP_EXT_DIR(fontkit), $PHP_EXT_CXX_SOURCES, $EXT_CXX_FLAGS, shared_objects_fontkit, yes)
+  PHP_NEW_EXTENSION(fontkit, $PHP_EXT_SOURCES, $ext_shared,, $EXT_CXX_FLAGS, cxx)
 fi
