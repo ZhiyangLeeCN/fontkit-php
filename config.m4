@@ -121,7 +121,7 @@ if test "$PHP_FONTKIT" != "no"; then
       third_party/icu/source/common/uts46.cpp third_party/icu/source/common/utypes.cpp \
       third_party/icu/source/common/uvector.cpp third_party/icu/source/common/uvectr32.cpp \
       third_party/icu/source/common/uvectr64.cpp third_party/icu/source/common/wintz.cpp"
-  
+
 
   LIB_ICU_I18N_SOURCES="third_party/icu/source/i18n/alphaindex.cpp third_party/icu/source/i18n/anytrans.cpp \
       third_party/icu/source/i18n/astro.cpp third_party/icu/source/i18n/basictz.cpp \
