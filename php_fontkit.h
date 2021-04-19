@@ -54,7 +54,7 @@ ZEND_TSRMLS_CACHE_EXTERN()
 #define fontkit_cxx_php_stream_context_from_zval(zcontext, nocontext) static_cast<php_stream_context *>(php_stream_context_from_zval(zcontext, nocontext))
 
 //compatible PHP-7.1 in C++
-#if PHP_MAJOR_VERSION == 7 && ((PHP_MINOR_VERSION == 2 && PHP_RELEASE_VERSION < 3))
+#if PHP_MAJOR_VERSION == 7 && ((PHP_MINOR_VERSION == 2 && PHP_RELEASE_VERSION < 3) || (PHP_MINOR_VERSION < 2))
 
 #undef ZEND_PARSE_PARAMETERS_START_EX
 #define ZEND_PARSE_PARAMETERS_START_EX(flags, min_num_args, max_num_args) do { \
