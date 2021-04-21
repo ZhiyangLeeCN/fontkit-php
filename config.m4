@@ -1,10 +1,29 @@
 PHP_ARG_WITH(fontkit, for fontkit support,
 [  --with-fontkit             Include fontkit support])
 
+PHP_ARG_ENABLE(wrap-glibc-memcpy, wrap memcpy,
+[  --enable-wrap-glibc-memcpy         Wrap memcpy for specify libgcc version(Only linux can using)], no, no)
+
+PHP_ARG_ENABLE(cxx-shared-module, enable C++ shared module is desired,
+[  --enable-cxx-shared-module        Enable C++ shared module is desired], yes, no)
+
 if test "$PHP_FONTKIT" != "no"; then
 
-  PHP_REQUIRE_CXX()
+  AS_CASE([$host_os],
+     [darwin*], [FTK_OS="MAC"],
+     [cygwin*], [FTK_OS="CYGWIN"],
+     [mingw*], [FTK_OS="MINGW"],
+     [linux*], [FTK_OS="LINUX"],
+     []
+  )
 
+  if test "$PHP_WRAP_GLIBC_MEMCPY" != "no"; then
+    LDFLAGS="$LDFLAGS -Wl,--wrap=memcpy"
+    AC_DEFINE_UNQUOTED([HAVE_WRAP_MEMCPY], ["$PHP_WRAP_GLIBC_MEMCPY"], [Need wrap memcpy function])
+    AC_MSG_RESULT([$PHP_WRAP_GLIBC_MEMCPY])
+  fi
+
+  PHP_REQUIRE_CXX()
   m4_ifndef([PHP_CXX_COMPILE_STDCXX], [m4_include([php_cxx_compile_stdcxx.m4])])
 
   AC_MSG_CHECKING([if compiling with clang])
@@ -282,5 +301,10 @@ if test "$PHP_FONTKIT" != "no"; then
   PHP_CXX_COMPILE_STDCXX(11, mandatory, EXT_STDCXX_SWiTCH)
   EXT_CXX_FLAGS="$EXT_C_FLAGS $EXT_STDCXX_SWiTCH"
 
-  PHP_NEW_EXTENSION(fontkit, $PHP_EXT_SOURCES, $ext_shared,, $EXT_CXX_FLAGS, cxx)
+  if test "$PHP_CXX_SHARED_MODULE" != "no"; then
+    PHP_NEW_EXTENSION(fontkit, $PHP_EXT_SOURCES, $ext_shared,, $EXT_CXX_FLAGS, cxx)
+  else
+    PHP_NEW_EXTENSION(fontkit, $PHP_EXT_SOURCES, $ext_shared,, $EXT_CXX_FLAGS)
+  fi
+
 fi

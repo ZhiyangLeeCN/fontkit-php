@@ -40,6 +40,13 @@ extern zend_module_entry fontkit_module_entry;
 ZEND_TSRMLS_CACHE_EXTERN()
 #endif
 
+#ifdef HAVE_WRAP_MEMCPY
+extern "C"
+{
+void *__wrap_memcpy(void *dest, const void *src, size_t n);
+}
+#endif
+
 #define FONTKIT_STARTUP_FUNCTION(module)    ZEND_MINIT_FUNCTION(tess_##module)
 #define FONTKIT_RINIT_FUNCTION(module)	    ZEND_RINIT_FUNCTION(tess_##module)
 #define FONTKIT_STARTUP(module)             ZEND_MODULE_STARTUP_N(tess_##module)(INIT_FUNC_ARGS_PASSTHRU)

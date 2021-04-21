@@ -6,6 +6,19 @@
 #include "font_php_class.h"
 #include "blob_php_class.h"
 
+#ifdef HAVE_WRAP_MEMCPY
+extern "C"
+{
+    
+asm(".symver memcpy, " HAVE_WRAP_MEMCPY);
+void *__wrap_memcpy(void *dest, const void *src, size_t n)
+{
+    return memcpy(dest, src, n);
+}
+
+}
+#endif
+
 PHP_MINIT_FUNCTION(fontkit)
 {
     FONTKIT_STARTUP(font_php_class);
