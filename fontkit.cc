@@ -9,7 +9,7 @@
 #ifdef HAVE_WRAP_MEMCPY
 extern "C"
 {
-    
+
 asm(".symver memcpy, " HAVE_WRAP_MEMCPY);
 void *__wrap_memcpy(void *dest, const void *src, size_t n)
 {
