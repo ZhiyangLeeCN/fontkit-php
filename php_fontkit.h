@@ -66,6 +66,8 @@ void *__wrap_memcpy(void *dest, const void *src, size_t n);
 // ZEND_PARSE_PARAMS_THROW parameter since add from 7.2.0 and remove in 7.3.0
 #if PHP_MINOR_VERSION == 2
 #define FTK_ZEND_WRONG_PARAMETERS_COUNT_ERROR zend_wrong_parameters_count_error(_flags & ZEND_PARSE_PARAMS_THROW, _num_args, _min_num_args, _max_num_args)
+#elif PHP_MINOR_VERSION == 0
+#define FTK_ZEND_WRONG_PARAMETERS_COUNT_ERROR zend_wrong_paramers_count_error(_num_args, _min_num_args, _max_num_args)
 #else
 #define FTK_ZEND_WRONG_PARAMETERS_COUNT_ERROR zend_wrong_parameters_count_error(_num_args, _min_num_args, _max_num_args)
 #endif
