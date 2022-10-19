@@ -57,14 +57,14 @@ PHP_METHOD(Blob, streamRead)
     blob_php_object = php_blob_fetch_object(blob_object);
     blob_php_object->blob = blob;
 
-    RETURN_OBJ(blob_object)
+    RETURN_OBJ(blob_object);
 }
 
 PHP_METHOD(Blob, faceCount)
 {
     blob_php_object *blob_php_object = php_blob_fetch_object(Z_OBJ_P(getThis()));
     zend_long count = hb_face_count(blob_php_object->blob);
-    RETURN_LONG(count)
+    RETURN_LONG(count);
 }
 
 PHP_METHOD(Blob, createFont)
@@ -85,14 +85,14 @@ PHP_METHOD(Blob, createFont)
     hb_face = hb_face_create(blob_php_object->blob, index);
     if (hb_face == hb_face_get_empty()) {
         php_error_docref(NULL, E_WARNING, "Failed to create font face.");
-        RETURN_FALSE
+        RETURN_FALSE;
     }
 
     hb_font = hb_font_create(hb_face);
     if (hb_font == hb_font_get_empty()) {
         hb_face_destroy(hb_face);
         php_error_docref(NULL, E_WARNING, "Failed to create font.");
-        RETURN_FALSE
+        RETURN_FALSE;
     }
 
     font_object = php_font_object_new(font_ce);
@@ -100,14 +100,14 @@ PHP_METHOD(Blob, createFont)
     font_php_object->face = hb_face;
     font_php_object->font = hb_font;
 
-    RETURN_OBJ(font_object)
+    RETURN_OBJ(font_object);
 }
 
 PHP_METHOD(Blob, destroy)
 {
     blob_php_object *blob_php_object = php_blob_fetch_object(Z_OBJ_P(getThis()));
     php_blob_resource_free(blob_php_object);
-    RETURN_TRUE
+    RETURN_TRUE;
 }
 
 static const zend_function_entry blob_php_class_methods[] = {

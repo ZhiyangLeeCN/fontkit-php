@@ -62,18 +62,18 @@ PHP_METHOD(Font, subset)
     dst_hb_face = hb_subset(src_hb_face, sub_input);
     hb_subset_input_destroy(sub_input);
     if (dst_hb_face == hb_face_get_empty()) {
-        RETURN_FALSE
+        RETURN_FALSE;
     } else {
         dst_hb_font = hb_font_create(dst_hb_face);
         if (dst_hb_font == hb_font_get_empty()) {
             hb_face_destroy(dst_hb_face);
-            RETURN_FALSE
+            RETURN_FALSE;
         } else {
             sub_font_obj = php_font_object_new(font_ce);
             sub_font_php_obj = php_font_fetch_object(sub_font_obj);
             sub_font_php_obj->face = dst_hb_face;
             sub_font_php_obj->font = dst_hb_font;
-            RETURN_OBJ(sub_font_obj)
+            RETURN_OBJ(sub_font_obj);
         }
     }
 }
@@ -91,7 +91,7 @@ PHP_METHOD(Font, getData)
     ZSTR_VAL(data)[hb_blob_len] = '\0';
     hb_blob_destroy(hb_blob);
 
-    RETURN_STR(data)
+    RETURN_STR(data);
 }
 
 PHP_METHOD(Font, streamWrite)
@@ -115,9 +115,9 @@ PHP_METHOD(Font, streamWrite)
 
     result = hb_blob_write_to_php_filename(filename, hb_blob, context);
     if (result == SUCCESS) {
-        RETURN_TRUE
+        RETURN_TRUE;
     } else {
-        RETURN_FALSE
+        RETURN_FALSE;
     }
 }
 
@@ -125,7 +125,7 @@ PHP_METHOD(Font, destroy)
 {
     font_php_object *font_php_obj = php_font_fetch_object(Z_OBJ_P(getThis()));
     php_font_resource_free(font_php_obj);
-    RETURN_TRUE
+    RETURN_TRUE;
 }
 
 static const zend_function_entry font_php_class_methods[] = {
